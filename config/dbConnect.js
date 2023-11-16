@@ -6,7 +6,7 @@ var con = mysql.createConnection({
     password: process.env.DATABASE_PASSWORD,
     database:process.env.DATABASE
 });
-// const sql = "SELECT * FROM users"
+// const sql = "SELECT * FROM user"
 // con.connect(function(err) {
 //     if (err) throw err;
 //        console.log("Connected!");

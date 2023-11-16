@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv').config();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 300;
 const morgan = require('morgan');
 const dbConnect = require('./config/dbConnect');
 const route = require('./Routes');
@@ -12,7 +12,10 @@ const cors = require('cors');
 
 
 
-// dbConnect();
+dbConnect.connect(function(err) {
+    if (err) throw err;
+       console.log("Connected!");
+});
 app.use(cors());
 app.use(morgan('dev'));
 

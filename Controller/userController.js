@@ -119,7 +119,7 @@ module.exports.login = (req,res)=>{
     }
 }
 module.exports.faceLogin = (req,res)=>{
-    try {
+    try {   
         const {id} = req.body;
         const sql = 'SELECT * FROM user WHERE id = ? ';
     
