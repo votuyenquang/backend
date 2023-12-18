@@ -2,6 +2,8 @@ var db = require('../config/dbConnect')
 const uuid = require('uuid');
 const Email = require('./emailController');
 const getPriceVND = require('../util/getPriceVND');
+const csvWriterAddData = require('../util/csvWriter');
+
 module.exports.getProductByCart = (req,res)=>{
     const {data} = req.body;
     const objData = JSON.parse(data);
@@ -83,6 +85,7 @@ module.exports.addBill = (req,res)=>{
     const status = 0;
     const values = [code_order,user,name,address,email,phone,total_price,message,status,methodPayment,idSale];
     const sql_Order = "INSERT INTO `order` (`code_order`,`idUser`, `name`,`address`,`email`,`phone`,`total_price`,`message`,`status`,`method_payment`,`idSale`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+    
     db.query(sql_Order,values,(err,rows,fields)=>{
         if(err){
             return res.json({msg:err});

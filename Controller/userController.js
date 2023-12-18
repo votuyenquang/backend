@@ -2,7 +2,6 @@ var db = require('../config/dbConnect')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const uuid = require('uuid');
-
 module.exports.getUser = (req,res)=>{
     try {
         const {token} = req.body;
@@ -88,7 +87,6 @@ module.exports.login = (req,res)=>{
     try {
         const {username,password} = req.body;
         const sql = 'SELECT * FROM user WHERE username = ? ';
-    
         db.query(sql,[username],async(err,rows,fields)=>{
             if (err) {
                 return res.json({msg:err});
@@ -163,16 +161,6 @@ module.exports.checkEmail = (req,res)=>{
     )
 }
 
-   
-
-
-
-
-
-
-
-
-
 
 
 module.exports.checkUsername = (req,res)=>{
@@ -194,7 +182,7 @@ module.exports.checkUsername = (req,res)=>{
 
 module.exports.getInforUser = (req,res)=>{
     const {idUser} = req.body;
-    const sql = "SELECT user.*,customer.address,customer.phone,COUNT(`order`.id) AS totalBill FROM `user` LEFT JOIN customer ON user.id = customer.idUser INNER JOIN `order` ON user.id=`order`.idUser WHERE user.id= ?";
+    const sql = "SELECT user.*,customer.address,customer.phone,COUNT(`order`.id) AS totalBill FROM `user` LEFT JOIN customer ON user.id = customer.idUser INNER JOIN `order` ON user.id=`order`.idUser WHERE user.id= ? group by user.id,customer.address,customer.phone ";
     db.query(sql,[idUser],(err,rows)=>{
         if(err){
             return res.json({msg:err});
