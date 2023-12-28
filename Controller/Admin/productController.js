@@ -2,7 +2,7 @@ var db = require('../../config/dbConnect')
 var slugify = require('slugify');
 var uuid = require('uuid')
 module.exports.addProduct = (req,res)=>{
-    const id = uuid.v4();
+    const id = uuid.v4().split('-')[0];
     const {name,price,promotional,image,idCategory,idProductType,imageDecription1,imageDecription2,imageDecription3,imageDecription4,description} = req.body;
     const slug = slugify(name);
     const sqlAdd = "INSERT INTO product (id,name,slug,price,promotional,image,idCategory,idProductType,imageDecription1,imageDecription2,imageDecription3,imageDecription4,description,status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,0)";
