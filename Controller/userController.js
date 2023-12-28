@@ -107,7 +107,8 @@ module.exports.login = (req,res)=>{
                     const theToken = jwt.sign({id:rows[0].id},process.env.SECRECT,{ expiresIn: '1h' });
                     return res.json({
                         msg:"Success",
-                        token:theToken
+                        token:theToken,
+                        idUser: rows[0].id
                     });
                 }
             }

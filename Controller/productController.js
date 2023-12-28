@@ -1,8 +1,70 @@
 var db = require('../config/dbConnect')
+var axios = require('axios')
+const jwt = require('jsonwebtoken');
+
 module.exports.getTopProductSale= (req,res)=>{
     const sql = "SELECT * FROM product where promotional > 0 ORDER BY (price-promotional)/(price) DESC LIMIT 3"
     db.query(sql, (err,result)=>{
         return res.send(result);
+    })
+}
+module.exports.getRecommendationProduct= async(req,res)=>{
+    try {
+        const token = req.body.id;
+        console.log({token});
+        if (!token) {
+            return res.status(401).json({ error: 'Token không được cung cấp' });
+        }
+        if (token == 1) { 
+            var idUser =  "227566c0-2d6c-11ec-9cf0-c9d95f18e810" 
+        } else {
+            const decoded = jwt.verify(token, process.env.SECRECT);
+            console.log(decoded);
+            var idUser =  decoded.id
+        }
+        console.log({idUser});
+      // Make a request to the Python API
+        const pythonApiResponse = await axios.post('http://127.0.0.1:5000/api/recommendation', {
+            idUser: idUser,
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+    
+        // Use the data from the Python API response
+        const responseData = pythonApiResponse.data;
+        console.log(responseData);
+        const arrProduct = []
+        const sqlFull = `SELECT * FROM product WHere product.id=?`
+        // Use Promise.all to wait for all queries to complete
+        await Promise.all(responseData.map(async (id) => {
+            const result = await new Promise((resolve) => {
+                db.query(sqlFull, id, (err, result) => {
+                    if (err) {
+                        resolve({ msg: err });
+                    } else {
+                        resolve(result[0]);
+                    }
+                });
+            });
+            arrProduct.push(result);
+        }));
+
+        console.log({ arrProduct });
+        res.send({ message: 'Data from Python API', data: arrProduct });
+    } catch (error) {
+        console.error('Error calling Python API:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+module.exports.getRecommendationDetails = (req,res)=>{
+    const id = req.body.id;
+    const sqlFull = `SELECT * FROM product WHere product.id=?`
+    db.query(sqlFull,id ,(err,result)=>{
+        if(err){
+            return res.json({msg:err});
+        } else return res.json({item:result[0]})
     })
 }
 
