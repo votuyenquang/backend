@@ -205,17 +205,17 @@ module.exports.getProductDeal = (req,res)=>{
             return bP - aP;
         });
         let item = [];
-        let numberofpage = 8;
+        let numberofpage = 12;
         let maxlength = numberofpage*page;  
         if(result.length>maxlength){
-            for(var i=maxlength-8;i<maxlength;i++){
+            for(var i=maxlength-12;i<maxlength;i++){
                 item.push(result[i])
                 if(i===maxlength-1){
                     return res.json({msg:"Still data",item:item})
                 }
             } 
         }else{
-            for(var i=maxlength-8;i<result.length;i++){
+            for(var i=maxlength-12;i<result.length;i++){
                 item.push(result[i])
                 if(i===result.length-1){
                    return res.json({msg:"Out of data",item:item})

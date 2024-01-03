@@ -35,9 +35,10 @@ module.exports.updateQuanitySale = (req,res)=>{
 }
 
 module.exports.addPromotion = (req,res)=>{
-    const {name_event_sale,code_sale,cost_sale,quanity,date_start,expired} = req.body.data;
-    const sql = "INSERT INTO sale(name_event_sale,code_sale,cost_sale,quanity,date_start,expired,used) VALUES (?,?,?,?,?,?,?)";
-    db.query(sql,[name_event_sale,code_sale.toUpperCase(),cost_sale,quanity,date_start,expired,0],(err,rows)=>{
+    const {name_event_sale,code_sale,cost_sale,quanity,date_start,expired,type} =req.body.data ;
+    console.log("=====",req.body.data);
+    const sql = "INSERT INTO sale(name_event_sale,code_sale,cost_sale,quanity,date_start,expired,type,used) VALUES (?,?,?,?,?,?,?,?)";
+    db.query(sql,[name_event_sale,code_sale.toUpperCase(),cost_sale,quanity,date_start,expired,type,0],(err,rows)=>{
         if(err){
             return res.json({msg:err});
         }else{
