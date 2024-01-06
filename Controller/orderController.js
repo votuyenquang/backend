@@ -132,45 +132,45 @@ module.exports.addBill = (req,res)=>{
                     }
                     if(index==dataProduct.length-1){
                         const detail_Bill = ` 
-                        - Địa chỉ giao hàng : ${address}<br/>
-                        - Ngày đặt : ${new Date(Date.now()).toString()}<br/>
-                        - Tình trạng : <b>Đang xử lý </b><br/>
+                        - Delivery address : ${address}<br/>
+                        - Date order : ${new Date(Date.now()).toString()}<br/>
+                        - Status : <b> Processing </b><br/>
                         <table style="border: 1px solid black;width: 80%;border-collapse: collapse">
                            <tr style="border: 1px solid black">
                            <td >
-                               <b> Sản phẩm </b>
+                               <b> Product </b>
                            </td>
                            <td >
-                                <b> Size/Màu sắc </b>
+                                <b> Size/Color </b>
                             </td>
                            <td style="text-align: center">
-                               <b>Số lượng</b>
+                               <b>Quantity</b>
                            </td>
                            <td>
-                               <b>Tạm tính</b>
+                               <b>Provisional</b>
                            </td>
                            </tr>
                            ${str_product}
                         </table>
-                        <b>Tổng tiền: ${getPriceVND.getPriceVND(total_price)} đ</b> 
+                        <b>Total: ${getPriceVND.getPriceVND(total_price)} đ</b> 
                         `
                         //Send mail for customer
-                        Email.SendEmail(email,"CTFASHION-Đặt hàng thành công",
+                        Email.SendEmail(email,"FashionHQ- Order successfully .. ",
                             `
-                            Chào ${name}. <br/>
-                            Cảm ơn bạn đã mua sắm tại CT Fashion. <br/>
-                            - Mã đơn hàng của bạn là : #${code_order}<br/>
+                            Heloo ${name}. <br/>
+                            Thank you for shopping at FashionHQ. <br/>
+                            - Your order code : #${code_order}<br/>
                             ${detail_Bill}<br/>
-                            Chúng tôi sẽ thông tin trạng thái đơn hàng trong email tiếp theo.<br/>
-                            Bạn vui lòng kiểm tra email thường xuyên nhé !
+                            We will inform you about the order status in the next email.<br/>
+                            Please check your email regularly !
                             `
                         )
                         //Send email for admininstrator
                         Email.SendEmail(process.env.EMAIL,`Đơn hàng mới #${code_order}`,
                             `
-                            - Tên khách hàng : ${name} <br/>
-                            - Email đặt hàng : ${email} <br/>
-                            - Số điện thoại đặt hàng : ${phone} <br/>
+                            - Customer : ${name} <br/>
+                            - Email : ${email} <br/>
+                            - Phone : ${phone} <br/>
                             ${detail_Bill}
                             `
                         )

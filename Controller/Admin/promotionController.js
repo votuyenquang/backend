@@ -10,6 +10,18 @@ module.exports.getFullPromotion = (req,res)=>{
         }
     })
 }
+module.exports.getPromotionNews = (req,res)=>{
+    const sql = "Select * from sale where expired < now() and (quanity - used) > 0 order by  date_start desc"
+
+    db.query(sql, (err,result)=>{
+        if(err){
+            return res.json({msg:err});
+        }else{
+            return res.json(result)
+        }
+    })
+}
+
 
 module.exports.updateTimeSale = (req,res)=>{
     const {id,date_start,expired} = req.body;

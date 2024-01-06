@@ -1,6 +1,7 @@
 var db = require('../config/dbConnect')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const Email = require('./emailController');
 const uuid = require('uuid');
 module.exports.getUser = (req,res)=>{
     try {
@@ -274,3 +275,107 @@ module.exports.updateAvatarUser = (req,res)=>{
         }
     })
 }
+
+module.exports.forgotPassword = (req,res)=>{
+    const {email} = req.body;
+    const sql = 'SELECT * FROM user WHERE email = ? ';
+    db.query(sql,[email],async(err,rows,fields)=>{
+        //Check email exist ?
+        if(rows.length == 0 ){
+            return res.status(201).json({
+                msg: "The E-mail not exist",
+            });
+        }
+        else{
+            const user = rows[0];
+            const resetUrl = `Hi, please follow this link to reset your password. this link is valid till 10 mins from now. <a href= 'http://localhost:3005/user/reset-password/${user.id} '>Click</a>  `
+            Email.SendEmail(email,'Forgot Password Link',
+                `
+                    Heloo ${user.name}. <br/>
+                    ${resetUrl} <br/>
+                    Please check your email regularly !
+
+                `)
+            return res.json({success: "Continue register"})
+        }
+    }
+    )
+}
+
+module.exports.resetPassword =  (async (req, res) => {
+    const  password  = uuid.v1().split('-')[0];
+    const hashPass = await bcrypt.hash(password, 12);
+    const { id } = req.params;
+    const sql = 'SELECT * FROM user WHERE id = ? ';
+    db.query(sql,[id],async(err,rows,fields)=>{
+        if(rows.length == 0 ){
+            return res.status(201).json({
+                msg: "The E-mail not exist",
+            });
+        }
+        else {
+            const user = rows[0];
+            const sql2 = 'Update user SET password = ? WHERE id = ? ';
+            db.query(sql2,[hashPass,id],async(err,rows,fields)=>{
+                if(err){
+                    return res.json({msg:err});
+                }else{
+                 Email.SendEmail(user.email,'Forgot Password Link',
+                `
+                    Heloo ${user.name}. <br/>
+                    Your password has been reset <br/>
+                    New password : ${password} <br
+                    Please check your email regularly !
+
+                `)
+                    return res.json({msg:"Success",
+                                    user: user
+                                    })
+                }
+            })
+            
+        }
+    })
+
+});
+
+module.exports.changePassword =  (async (req, res) => {
+    const  {id, password, newPassword, newPasswordAccept}  = req.body.data;
+    console.log("====", id);
+    
+    const sql = 'SELECT * FROM user WHERE id = ? ';
+    db.query(sql,[id],async(err,rows,fields)=>{
+        if(rows.length == 0 ){
+            return res.status(201).json({
+                msg: "The E-mail not exist",
+            });
+        }
+        else {
+            const user = rows[0];
+            if (newPassword !== newPasswordAccept) {
+                return res.status(422).json({
+                    msg: "Accept new password not match"
+                });
+            }
+            const passMatch = await bcrypt.compare(password,user.password);
+            if(!passMatch){
+                return res.status(422).json({
+                    msg: "Incorrect",
+                });
+            }else{
+                    const hashPass = await bcrypt.hash(newPassword, 12);
+                    const sql2 = 'Update user SET password = ? WHERE id = ? ';
+                    db.query(sql2,[hashPass,id],async(err,rows,fields)=>{
+                        if(err){
+                            return res.json({msg:err});
+                        }else{
+                            return res.json({msg:"Success"})
+                        }
+                    })
+                }
+     
+            
+        }
+    })
+
+});
