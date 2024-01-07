@@ -77,14 +77,14 @@ module.exports.getProductFavorite = (req,res)=>{
 }
 
 module.exports.addBill = (req,res)=>{
-    let {name,address,email,phone,total_price,message,dataProduct,methodPayment,user,idSale} =req.body;
+    let {name,address,email,phone,total_price,message,dataProduct,methodPayment,user,idSale,payment_status} =req.body;
     if(user===""){
         user=null;
     }
     const code_order = "order_"+uuid.v4()
     const status = 0;
-    const values = [code_order,user,name,address,email,phone,total_price,message,status,methodPayment,idSale];
-    const sql_Order = "INSERT INTO `order` (`code_order`,`idUser`, `name`,`address`,`email`,`phone`,`total_price`,`message`,`status`,`method_payment`,`idSale`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+    const values = [code_order,user,name,address,email,phone,total_price,message,status,methodPayment,idSale,payment_status];
+    const sql_Order = "INSERT INTO `order` (`code_order`,`idUser`, `name`,`address`,`email`,`phone`,`total_price`,`message`,`status`,`method_payment`,`idSale`,`payment_status`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
     
     db.query(sql_Order,values,(err,rows,fields)=>{
         if(err){
