@@ -51,7 +51,7 @@ module.exports.getRecommendationProduct= async(req,res)=>{
             arrProduct.push(result);
         }));
 
-        console.log({ arrProduct });
+
         res.send({ message: 'Data from Python API', data: arrProduct });
     } catch (error) {
         console.error('Error calling Python API:', error.message);
