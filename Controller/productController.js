@@ -34,7 +34,7 @@ module.exports.getRecommendationProduct= async(req,res)=>{
     
         // Use the data from the Python API response
         const responseData = pythonApiResponse.data;
-        console.log(responseData);
+        // console.log(responseData);
         const arrProduct = []
         const sqlFull = `SELECT * FROM product WHere product.id=?`
         // Use Promise.all to wait for all queries to complete
@@ -51,7 +51,7 @@ module.exports.getRecommendationProduct= async(req,res)=>{
             arrProduct.push(result);
         }));
 
-        console.log({ arrProduct });
+
         res.send({ message: 'Data from Python API', data: arrProduct });
     } catch (error) {
         console.error('Error calling Python API:', error.message);

@@ -8,8 +8,8 @@ router.post("/getUserById",controller.getUserById)
 router.post("/getInforUser",controller.getInforUser);
 router.post("/login",controller.login)
 router.post("/facelogin",controller.faceLogin)
-router.post("/forgotpassword",controller.forgotPassword)
-router.put('/reset-password/:id',controller.resetPassword)
+router.post("/forgot-password",controller.forgotPassword)
+router.get('/reset-password/:id',controller.resetPassword)
 router.post("/change-password",controller.changePassword);
 router.post("/register",controller.register);
 

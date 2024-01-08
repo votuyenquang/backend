@@ -277,9 +277,15 @@ module.exports.updateAvatarUser = (req,res)=>{
 }
 
 module.exports.forgotPassword = (req,res)=>{
-    const {email} = req.body;
+    const email = req.body.email;
+    console.log({email});
     const sql = 'SELECT * FROM user WHERE email = ? ';
     db.query(sql,[email],async(err,rows,fields)=>{
+        if (err) {
+            return res.status(402).json({
+                msg: "Error",
+            });
+        }
         //Check email exist ?
         if(rows.length == 0 ){
             return res.status(201).json({
@@ -296,7 +302,7 @@ module.exports.forgotPassword = (req,res)=>{
                     Please check your email regularly !
 
                 `)
-            return res.json({success: "Continue register"})
+            return res.json({msg: "Success"})
         }
     }
     )
@@ -324,12 +330,11 @@ module.exports.resetPassword =  (async (req, res) => {
                 `
                     Heloo ${user.name}. <br/>
                     Your password has been reset <br/>
-                    New password : ${password} <br
+                    New password : ${password} <br>
                     Please check your email regularly !
 
                 `)
-                    return res.json({msg:"Success",
-                                    user: user
+                    return res.json({msg:"Success"
                                     })
                 }
             })

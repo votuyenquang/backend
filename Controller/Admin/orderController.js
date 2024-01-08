@@ -1,3 +1,4 @@
+const { success } = require('concurrently/src/defaults');
 var db = require('../../config/dbConnect')
 const Email = require('../emailController');
 module.exports.getFullBill = (req,res)=>{
@@ -27,13 +28,21 @@ module.exports.updateStatusBill = (req,res)=>{
                 )
             }
             if(status===2){
-                Email.SendEmail(email,`Hoàn thành đơn hàng #${code_order}`,
-                `Đơn hàng #${code_order} <b style="color:green">đã hoàn thành</b>, hãy kiểm tra lại !<br/>
-                Nếu có vấn đề gì hãy liên hệ với chúng tôi. <br/>
-                Vào website hoặc ứng dụng di động để đánh giá và bình luận sản phẩm ngay. <br/>
-                Cảm ơn bạn đã lựa chọn cửa hàng cửa hàng của chúng tôi !!
-                `
-            )
+                const sql2 = "UPDATE `order` SET payment_status =? WHERE code_order = ?";
+                db.query(sql2,[status,code_order],(err,rows)=>{
+                    if(err){
+                        return res.json({msg:err});
+                    }else{
+                        
+                        Email.SendEmail(email,`Hoàn thành đơn hàng #${code_order}`,
+                        `Đơn hàng #${code_order} <b style="color:green">đã hoàn thành</b>, hãy kiểm tra lại !<br/>
+                        Nếu có vấn đề gì hãy liên hệ với chúng tôi. <br/>
+                        Vào website hoặc ứng dụng di động để đánh giá và bình luận sản phẩm ngay. <br/>
+                        Cảm ơn bạn đã lựa chọn cửa hàng cửa hàng của chúng tôi !!
+                        `
+                    )
+                    }
+                })
             }
             if(status===3){
                 Email.SendEmail(email,`Cập nhật đơn hàng #${code_order}`,
