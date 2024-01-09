@@ -20,34 +20,34 @@ module.exports.updateStatusBill = (req,res)=>{
             return res.json({msg:err});
         }else{
             if(status===1){
-                Email.SendEmail(email,`Cập nhật đơn hàng #${code_order}`,
-                    `Đơn hàng #${code_order} của bạn hiện đang trong <b style="color:blue">trạng thái giao hàng</b> !<br/>
-                    Chúng tôi sẽ thông tin trạng thái đơn hàng trong email tiếp theo.<br/>
-                    Bạn vui lòng kiểm tra email thường xuyên nhé !
+                Email.SendEmail(email,`Update order #${code_order}`,
+                    `Your order #${code_order} is currently in  <b style="color:blue">delivery status</b> !<br/>
+                    We will inform you about the order status in the next email.<br/>
+                    Please check your email regularly !
                     `
                 )
             }
             if(status===2){
                 const sql2 = "UPDATE `order` SET payment_status =? WHERE code_order = ?";
-                db.query(sql2,[status,code_order],(err,rows)=>{
+                db.query(sql2,[1,code_order],(err,rows)=>{
                     if(err){
                         return res.json({msg:err});
                     }else{
                         
-                        Email.SendEmail(email,`Hoàn thành đơn hàng #${code_order}`,
-                        `Đơn hàng #${code_order} <b style="color:green">đã hoàn thành</b>, hãy kiểm tra lại !<br/>
-                        Nếu có vấn đề gì hãy liên hệ với chúng tôi. <br/>
-                        Vào website hoặc ứng dụng di động để đánh giá và bình luận sản phẩm ngay. <br/>
-                        Cảm ơn bạn đã lựa chọn cửa hàng cửa hàng của chúng tôi !!
+                        Email.SendEmail(email,`Complete the order #${code_order}`,
+                        `Order #${code_order} <b style="color:green">completed</b>, please check again !<br/>
+                        If there is any problem please contact us. <br/>
+                        Go to the website or mobile application to rate and comment on the product immediately. <br/>
+                        Thank you for choosing our store!!
                         `
                     )
                     }
                 })
             }
             if(status===3){
-                Email.SendEmail(email,`Cập nhật đơn hàng #${code_order}`,
-                    `Đơn hàng #${code_order} của bạn <b style="color:gray">đã hủy</b> thành công !<br/>
-                    Nếu có thắc mắc hay vấn đề gì vui lòng liên hệ với chúng tôi ! <br/>
+                Email.SendEmail(email,`Update order #${code_order}`,
+                    `Your order #${code_order} <b style="color:gray">cancelled</b> was successful!<br/>
+                    If you have any questions or problems, please contact us! <br/>
                     `
                 )
             }
