@@ -196,9 +196,7 @@ module.exports.getInforUser = (req,res)=>{
 
 module.exports.getIdUserFace = (req,res)=>{
     const {id} = req.body;
-    console.log('====================================');
-    console.log("id",id);
-    console.log('====================================');
+
     const sql = "SELECT * from `user` WHERE id= ?";
     db.query(sql,[id], (err,rows) => {
         if(err) {
@@ -223,9 +221,7 @@ module.exports.updateGetIdUserFace = (req,res)=>{
             return res.json({msg:err});
         }
         else {
-            console.log('====================================');
-            console.log("thanhcong");
-            console.log('====================================');
+ 
             // return res.json(rows);
             return res.json({mess: "Thanh cong"})
         }

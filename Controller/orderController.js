@@ -166,7 +166,7 @@ module.exports.addBill = (req,res)=>{
                             `
                         )
                         //Send email for admininstrator
-                        Email.SendEmail(process.env.EMAIL,`Đơn hàng mới #${code_order}`,
+                        Email.SendEmail(process.env.EMAIL,`New order #${code_order}`,
                             `
                             - Customer : ${name} <br/>
                             - Email : ${email} <br/>
