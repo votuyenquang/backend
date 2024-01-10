@@ -11,7 +11,10 @@ module.exports.getFullPromotion = (req,res)=>{
     })
 }
 module.exports.getPromotionNews = (req,res)=>{
-    const sql = "Select * from sale where expired < now() and (quanity - used) > 0 order by  date_start desc"
+    // const sql = "Select * from sale where expired < now() and (quanity - used) > 0 order by  date_start desc"
+    const sql = "SELECT * FROM sale WHERE expired > NOW() AND (quanity - used) > 0 ORDER BY date_start DESC";
+
+
 
     db.query(sql, (err,result)=>{
         if(err){
