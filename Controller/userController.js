@@ -59,6 +59,7 @@ module.exports.register = (req,res)=>{
         const id = uuid.v1();
         const {email,password,username,name} = req.body;
         const ruler = 0;
+        const status = 0;
       
         const sql = 'SELECT * FROM user WHERE email = ? ';
         db.query(sql,[email],async(err,rows,fields)=>{
@@ -70,8 +71,8 @@ module.exports.register = (req,res)=>{
             }
             //create password with code bcrypt
             const hashPass = await bcrypt.hash(password, 12);
-            const sqlRegister = 'INSERT INTO `user`(`id`,`username`,`email`,`password`,`name`,`ruler`) VALUES(?,?,?,?,?,?)';
-            db.query(sqlRegister,[id,username,email,hashPass,name,ruler],(err,rows,fields)=>{
+            const sqlRegister = 'INSERT INTO `user`(`id`,`username`,`email`,`password`,`name`,`ruler`,`status`) VALUES(?,?,?,?,?,?,?)';
+            db.query(sqlRegister,[id,username,email,hashPass,name,ruler,status],(err,rows,fields)=>{
                 if (err) {
                     return res.json({msg:err});
                 }
@@ -184,7 +185,7 @@ module.exports.checkUsername = (req,res)=>{
 
 module.exports.getInforUser = (req,res)=>{
     const {idUser} = req.body;
-    const sql = "SELECT user.*,customer.address,customer.phone,COUNT(`order`.id) AS totalBill FROM `user` LEFT JOIN customer ON user.id = customer.idUser INNER JOIN `order` ON user.id=`order`.idUser WHERE user.id= ? group by user.id,customer.address,customer.phone ";
+    const sql = "SELECT user.*,customer.address,customer.phone,COUNT(`order`.id) AS totalBill FROM `user` LEFT JOIN customer ON user.id = customer.idUser Left JOIN `order` ON user.id=`order`.idUser WHERE user.id= ? group by user.id,customer.address,customer.phone ";
     db.query(sql,[idUser],(err,rows)=>{
         if(err){
             return res.json({msg:err});
